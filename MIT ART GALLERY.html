@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtHub - Art Showcase Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        /* Search Section */
+        .search-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-container {
+            display: flex;
+            background: white;
+            border-radius: 50px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .search-container:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .search-input {
+            padding: 1rem 1.5rem;
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            color: #333;
+            outline: none;
+            min-width: 250px;
+            flex: 1;
+        }
+
+        .search-input:focus {
+            background: #f8f9ff;
+        }
+
+        .search-input::placeholder {
+            color: #999;
+            font-style: italic;
+        }
+
+        .search-dropdown {
+            padding: 1rem 1.5rem;
+            border: none;
+            border-left: 1px solid #e2e8f0;
+            background: transparent;
+            font-size: 1rem;
+            color: #333;
+            cursor: pointer;
+            outline: none;
+            min-width: 180px;
+        }
+
+        .search-dropdown:focus {
+            background: #f8f9ff;
+        }
+
+        .search-button {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .search-button:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+            transform: translateX(2px);
+        }
+
+        .clear-button {
+            padding: 1rem 1.5rem;
+            background: #f1f3f5;
+            color: #666;
+            border: none;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            margin-left: 1rem;
+        }
+
+        .clear-button:hover {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        /* Gallery Section */
+        .gallery {
+            margin-top: 3rem;
+            padding: 2rem 0;
+        }
+
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .gallery-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 1rem;
+        }
+
+        .gallery-subtitle {
+            font-size: 1.1rem;
+            color: #718096;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .artwork-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Artwork Card Styles */
+        .artwork-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .artwork-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .artwork-image {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-bottom: 1px solid #eee;
+    transition: transform 0.4s ease;
+}
+
+        .artwork-card:hover .artwork-image {
+            transform: scale(1.05);
+        }
+
+        .artwork-info {
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .artwork-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .artwork-artist {
+            font-size: 1rem;
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .artwork-contact {
+            font-size: 0.9rem;
+            color: #718096;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .artwork-contact::before {
+            content: "👤";
+            font-size: 0.8rem;
+        }
+
+        .artwork-type {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Filter Results */
+        .filter-info {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-info.hidden {
+            display: none;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #718096;
+        }
+
+        .no-results.hidden {
+            display: none;
+        }
+
+        .no-results h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #4a5568;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .logo h1 {
+                font-size: 2.5rem;
+            }
+
+            .search-section {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .search-container {
+                width: 100%;
+                max-width: 450px;
+                flex-direction: column;
+                border-radius: 20px;
+            }
+
+            .search-input {
+                min-width: auto;
+                border-bottom: 1px solid #e2e8f0;
+                border-radius: 0;
+            }
+
+            .search-dropdown {
+                min-width: auto;
+                border-left: none;
+                border-top: 1px solid #e2e8f0;
+                border-radius: 0;
+            }
+
+            .search-button {
+                border-radius: 0 0 20px 20px;
+            }
+
+            .clear-button {
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+
+            .artwork-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .gallery-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo h1 {
+                font-size: 2rem;
+            }
+
+            .artwork-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .artwork-card {
+                margin: 0 auto;
+                max-width: 100px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+/* Image Modal Popup */
+.image-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.image-modal img {
+    max-width: 90%;
+    max-height: 80%;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.image-modal-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>MIT ART GALLERY</h1>
+                <p>Discover Amazing Artwork from Talented Artists</p>
+            </div>
+            
+            <div class="search-section">
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search by title, artist, or artwork type...">
+                    <select class="search-dropdown" id="artworkType">
+                        <option value="">All Artwork Types</option>
+                        <option value="Painting">Painting</option>
+                        <option value="Sketch">Sketch</option>
+                        <option value="Sculpture">Sculpture</option>
+                        <option value="Digital Art">Digital Art / Illustration</option>
+                    </select>
+                    <button class="search-button" id="searchBtn">Search</button>
+                </div>
+                <button class="clear-button" id="clearBtn">Show All</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="gallery">
+            <div class="gallery-header">
+                <h2 class="gallery-title">Featured Artworks</h2>
+                <p class="gallery-subtitle">Explore our curated collection of stunning artworks from talented artists around the world</p>
+            </div>
+
+            <div class="filter-info hidden" id="filterInfo">
+                <p><strong id="filterCount">0</strong> artworks found for "<strong id="filterType"></strong>"</p>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading artworks...</p>
+            </div>
+
+            <div class="artwork-grid" id="artworkGrid">
+                <!-- Artwork cards will be dynamically generated here -->
+            </div>
+
+            <div class="no-results hidden" id="noResults">
+                <h3>No artworks found</h3>
+                <p>Try selecting a different artwork type or view all artworks.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Sample artwork data
+        const artworks = [
+           
+            {
+                id: 1,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/lucky5.jpg",
+                title: "NonChalant Cat",
+                artist: "Lucky Wakode",
+                contact: "8261821355",
+                type: "Digital Art"
+            },
+            {
+                id: 2,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/SanikaDrawing.jpg",
+                title: "Crying Eye",
+                artist: "Sanika Walnikar",
+                contact: "sanikawalnikar@gmail.com",
+                type: "Sketch"
+            },
+            
+            {
+                id: 3,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/kshitija4.jpg",
+                title: "Confident Peacock",
+                artist: "Kshitija Mule",
+                contact: "@kshitija_mule_",
+                type: "Painting"
+            },
+            {
+                id: 4,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/omkar5.jpg",
+                title: "Scribble Art",
+                artist: "Omkar Avhale",
+                contact: "9226122529",
+                type: "Sketch"
+            },
+            {
+                id: 5,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/priya1.jpg",
+                title: "Lord Krishna Sketch",
+                artist: "Priya Mundhe",
+                contact: "7499869779",
+                type: "Sketch"
+            },
+            {
+                id: 6,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/karunya2.jpg",
+                title: "Minato Sketch",
+                artist: "Karunya Wankhede",
+                contact: "9766042274",
+                type: "Sketch"
+            },
+            {
+                id: 7,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/kshitija5.jpg",
+                title: "Pascal From Tangled",
+                artist: "Kshitija Mule",
+                contact: "@kshitija_mule_",
+                type: "Painting"
+            },
+            {
+                id: 8,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/rudrani2.jpg",
+                title: "Sunset Painting",
+                artist: "Rudrani Takalkar",
+                contact: "7822093229",
+                type: "Painting"
+            },
+            {
+                id: 9,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/lucky1.jpg",
+                title: "Arlecchino",
+                artist: "Lucky Wakode",
+                contact: "8261821355",
+                type: "Digital Art"
+            },
+            {
+                id: 10,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/omkar1.jpg",
+                title: "Lord Ganesha Sketch",
+                artist: "Omkar Avhale",
+                contact: "9226122529",
+                type: "Sketch"
+
+            },
+            {
+                id: 11,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/jagruti1.jpg",
+                title: "Sunset With Swing",
+                artist: "Jagruti Umalkar",
+                contact: "@artbyjagz",
+                type: "Painting"
+            },
+            {
+                id: 12,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/kshitija2.jpg",
+                title: "White Flowers Bloom",
+                artist: "Kshitija Mule",
+                contact: "@kshitija_mule_",
+                type: "Painting"
+            },
+            
+            // Additional Paintings
+            {
+                id: 13,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/lucky4.jpg",
+                title: "Arlecchino's Portrait",
+                artist: "Lucky Wakode",
+                contact: "8261821355",
+                type: "Digital Art"
+
+            },
+            {
+                id: 14,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/omkar6.jpg",
+                title: "Troll Face",
+                artist: "Omkar Avhale",
+                contact: "9226122529",
+                type: "Sketch"
+            },
+            {
+                id: 15,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/karunya3.jpg",
+                title: "Naruto Sketch",
+                artist: "Karunya Wankhede",
+                contact: "9766042274",
+                type: "Sketch"
+            },
+            {
+                id: 16,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/sanika2.jpg",
+                title: "Lata Mangeshkar Sketch",
+                artist: "Sanika Walnikar",
+                contact: "sanikawalnikar@gmail.com",
+                type: "Sketch"
+            },
+
+            // Additional Sketches
+            {
+                id: 17,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/kshitija1.jpg",
+                title: "Elegant Eye",
+                artist: "Kshitija Mule",
+                contact: "@kshitija_mule_",
+                type: "Painting"
+            },
+            {
+                id: 18,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/priya3.jpg",
+                title: "Anya Potrait",
+                artist: "Priya Mundhe",
+                contact: "7499869779",
+                type: "Sketch"
+            },
+            {
+                id: 19,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/rudrani1.jpg",
+                title: "Cat on Tree",
+                artist: "Rudrani Takalkar",
+                contact: "7822093229",
+                type: "Sketch"
+            },
+            {
+                id: 20,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/kshitija3.jpg",
+                title: "Peacock Design",
+                artist: "Kshitija Mule",
+                contact: "@kshitija_mule_",
+                type: "Painting"
+            },
+
+            // Additional Sculptures
+            {
+                id: 21,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/omkar2.jpg",
+                title: "Meeting Hands",
+                artist: "Omkar Avhale",
+                contact: "9226122529",
+                type: "Sketch"
+            },
+            {
+                id: 22,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/lucky3.jpg",
+                title: "Cat at the Window",
+                artist: "Lucky Wakode",
+                contact: "8261821355",
+                type: "Digital Art"
+            },
+            {
+                id: 23,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/priya4.jpg",
+                title: "Krishna with his Flute",
+                artist: "Priya Mundhe",
+                contact: "7499869779",
+                type: "Sketch"
+            },
+            {
+                id: 24,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/jagruti2.jpg",
+                title: "Sunset in Forest",
+                artist: "Jagruti Umalkar",
+                contact: "@artbyjagz",
+                type: "Painting"
+            },
+
+            // Additional Digital Art
+            {
+                id: 25,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/karunya1.jpg",
+                title: "Sasuke Portrait",
+                artist: "Karunya Wankhede",
+                contact: "9766042274",
+                type: "Sketch"
+            },
+            {
+                id: 26,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/lucky2.jpg",
+                title: "Blue Supercar",
+                artist: "Lucky Wakode",
+                contact: "8261821355",
+                type: "Digital Art"
+            },
+            {
+                id: 27,
+                image: "https://raw.githubusercontent.com/karunyawankhede/ArtHub/main/omkar4.jpg",
+                title: "Krishna's Face Sketch",
+                artist: "Omkar Avhale",
+                contact: "9226122529",
+                type: "Sketch"
+            },
+                    ];
+
+        // DOM Elements
+        const artworkGrid = document.getElementById('artworkGrid');
+        const searchInput = document.getElementById('searchInput');
+        const artworkTypeSelect = document.getElementById('artworkType');
+        const searchBtn = document.getElementById('searchBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const filterInfo = document.getElementById('filterInfo');
+        const filterCount = document.getElementById('filterCount');
+        const filterType = document.getElementById('filterType');
+        const noResults = document.getElementById('noResults');
+        const loading = document.getElementById('loading');
+
+        // Function to create artwork card HTML
+        function createArtworkCard(artwork) {
+            return `
+                <div class="artwork-card" data-type="${artwork.type}" data-title="${artwork.title.toLowerCase()}" data-artist="${artwork.artist.toLowerCase()}">
+                    <img src="${artwork.image}" alt="${artwork.title} by ${artwork.artist}" class="artwork-image" loading="lazy">
+                    <div class="artwork-info">
+                        <div class="artwork-type">${artwork.type}</div>
+                        <h3 class="artwork-title">${artwork.title}</h3>
+                        <p class="artwork-artist">by ${artwork.artist}</p>
+                        <p class="artwork-contact">${artwork.contact}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Function to render artworks
+        function renderArtworks(artworksToShow = artworks) {
+            // Show loading
+            loading.classList.add('show');
+            artworkGrid.innerHTML = '';
+
+            // Simulate loading delay for better UX
+            setTimeout(() => {
+                loading.classList.remove('show');
+
+                if (artworksToShow.length === 0) {
+                    noResults.classList.remove('hidden');
+                    artworkGrid.innerHTML = '';
+                } else {
+                    noResults.classList.add('hidden');
+                    const artworkHTML = artworksToShow.map(artwork => createArtworkCard(artwork)).join('');
+                    artworkGrid.innerHTML = artworkHTML;
+                }
+            }, 300);
+        }
+
+        // Function to filter artworks by search text and type
+        function filterArtworks(searchText = '', selectedType = '') {
+            let filteredArtworks = artworks;
+            
+            // Apply text search filter
+            if (searchText.trim()) {
+                const searchLower = searchText.toLowerCase().trim();
+                filteredArtworks = filteredArtworks.filter(artwork => 
+                    artwork.title.toLowerCase().includes(searchLower) ||
+                    artwork.artist.toLowerCase().includes(searchLower) ||
+                    artwork.type.toLowerCase().includes(searchLower)
+                );
+            }
+            
+            // Apply type filter
+            if (selectedType) {
+                filteredArtworks = filteredArtworks.filter(artwork => 
+                    artwork.type === selectedType
+                );
+            }
+            
+            // Update filter info
+            if (searchText.trim() || selectedType) {
+                filterCount.textContent = filteredArtworks.length;
+                let filterDescription = '';
+                
+                if (searchText.trim() && selectedType) {
+                    filterDescription = `"${searchText}" in ${selectedType}`;
+                } else if (searchText.trim()) {
+                    filterDescription = `"${searchText}"`;
+                } else if (selectedType) {
+                    filterDescription = selectedType;
+                }
+                
+                filterType.textContent = filterDescription;
+                filterInfo.classList.remove('hidden');
+            } else {
+                filterInfo.classList.add('hidden');
+            }
+
+            renderArtworks(filteredArtworks);
+        }
+
+        // Function to perform search with current inputs
+        function performSearch() {
+            const searchText = searchInput.value;
+            const selectedType = artworkTypeSelect.value;
+            filterArtworks(searchText, selectedType);
+        }
+
+        // Event Listeners
+        searchBtn.addEventListener('click', performSearch);
+
+        clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            artworkTypeSelect.value = '';
+            filterArtworks('', '');
+        });
+
+        // Allow Enter key to trigger search in both input fields
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        artworkTypeSelect.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Real-time search as user types (with debounce)
+        let searchTimeout;
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                performSearch();
+            }, 300); // 300ms delay for better performance
+        });
+
+        // Auto-search when dropdown changes
+        artworkTypeSelect.addEventListener('change', performSearch);
+
+        // Initialize the gallery with all artworks
+        document.addEventListener('DOMContentLoaded', () => {
+    renderArtworks();
+
+    // Image Modal Logic (now runs after DOM is ready)
+    const imageModal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const closeModal = document.getElementById('closeModal');
+
+    // When image clicked
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('artwork-image')) {
+            modalImage.src = e.target.src;
+            imageModal.style.display = 'flex';
+        }
+    });
+
+    // Close when clicking X or outside
+    closeModal.addEventListener('click', () => {
+        imageModal.style.display = 'none';
+    });
+
+    imageModal.addEventListener('click', (e) => {
+        if (e.target === imageModal) {
+            imageModal.style.display = 'none';
+        }
+    });
+});
+
+
+        // Add image error handling
+        document.addEventListener('DOMContentLoaded', () => {
+            artworkGrid.addEventListener('error', (e) => {
+                if (e.target.tagName === 'IMG') {
+                    e.target.style.background = 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
+                    e.target.style.display = 'flex';
+                    e.target.style.alignItems = 'center';
+                    e.target.style.justifyContent = 'center';
+                    e.target.innerHTML = '<span style="color: #666; font-size: 0.9rem;">Image not available</span>';
+                }
+            }, true);
+        });
+
+        // Add smooth scroll behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
+
+    </script>
+
+<!-- Image Modal -->
+<div class="image-modal" id="imageModal">
+  <span class="image-modal-close" id="closeModal">&times;</span>
+  <img id="modalImage" src="" alt="Full View">
+</div>
+
+</body>
+</html>
